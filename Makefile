@@ -1,7 +1,7 @@
 CC ?= cc
 APP := chatgpt-wrapper
 BUILD_DIR := build
-SRC := src/main.c src/hotkey.c src/downloads.c src/settings.c
+SRC := src/main.c src/hotkey.c src/downloads.c src/settings.c src/continuation.c
 
 CFLAGS += -Wall -Wextra -std=c11 $(shell pkg-config --cflags gtk4 webkitgtk-6.0)
 LDFLAGS += $(shell pkg-config --libs gtk4 webkitgtk-6.0) -lX11

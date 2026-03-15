@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <webkit/webkit.h>
 
+#include "continuation.h"
 #include "downloads.h"
 #include "hotkey.h"
 #include "settings.h"
@@ -14,6 +15,7 @@
 static GtkWindow *main_window = NULL;
 static GtkWidget *back_button = NULL;
 static GtkWidget *forward_button = NULL;
+static GtkWidget *continue_button = NULL;
 
 static char *
 build_profile_path(const char *base_dir, const char *leaf_dir)
@@ -138,6 +140,15 @@ on_reload_clicked(GtkButton *button, gpointer user_data)
 }
 
 static void
+on_continue_clicked(GtkButton *button, gpointer user_data)
+{
+    WebKitWebView *web_view = g_object_get_data(G_OBJECT(button), "chatgpt-webview");
+    GtkWindow *window = GTK_WINDOW(user_data);
+
+    continuation_start(window, web_view);
+}
+
+static void
 on_web_view_load_changed(WebKitWebView *web_view, WebKitLoadEvent load_event, gpointer user_data)
 {
     GtkWindow *window = GTK_WINDOW(user_data);
@@ -207,10 +218,12 @@ ensure_main_window(GtkApplication *app)
 
     back_button = gtk_button_new_with_label("Back");
     forward_button = gtk_button_new_with_label("Forward");
+    continue_button = gtk_button_new_with_label("New Chat with Context");
 
     gtk_header_bar_set_show_title_buttons(GTK_HEADER_BAR(header), TRUE);
     gtk_header_bar_pack_start(GTK_HEADER_BAR(header), back_button);
     gtk_header_bar_pack_start(GTK_HEADER_BAR(header), forward_button);
+    gtk_header_bar_pack_end(GTK_HEADER_BAR(header), continue_button);
     gtk_header_bar_pack_end(GTK_HEADER_BAR(header), reload_button);
 
     gtk_window_set_title(GTK_WINDOW(window), "ChatGPT");
@@ -222,6 +235,8 @@ ensure_main_window(GtkApplication *app)
     g_signal_connect(back_button, "clicked", G_CALLBACK(on_back_clicked), web_view);
     g_signal_connect(forward_button, "clicked", G_CALLBACK(on_forward_clicked), web_view);
     g_signal_connect(reload_button, "clicked", G_CALLBACK(on_reload_clicked), web_view);
+    g_object_set_data(G_OBJECT(continue_button), "chatgpt-webview", web_view);
+    g_signal_connect(continue_button, "clicked", G_CALLBACK(on_continue_clicked), window);
     g_signal_connect(
         web_view,
         "load-changed",

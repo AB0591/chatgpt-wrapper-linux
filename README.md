@@ -41,6 +41,7 @@ This branch is the plain C implementation track. It does not require Rust to bui
 - Milestone 4 complete with an X11 global hotkey wired to the window toggle action
 - Milestone 5 complete with native download handling through GTK save dialogs
 - Milestone 6 complete with remembered window size, native navigation controls, and updated caveats
+- Milestone 7 complete with a `New Chat with Context` action and clipboard-backed continuation draft flow
 - WebKit profile data, cookies, and credential storage persist under the normal user data/cache directories
 - No Rust toolchain, Cargo project, or Rust runtime dependency
 - Local compilation verified with `make`, and the app has been run successfully under LXQt
@@ -71,6 +72,7 @@ This is where the embedded WebKit session stores cookies and related site data s
 
 - Window size is persisted, but window position is not yet stored
 - The global hotkey currently targets X11 sessions and uses `Ctrl+Alt+Space`
+- The continuation helper uses a small amount of page-side DOM automation to extract recent text and populate a fresh-chat draft
 
 ## Repo docs
 
