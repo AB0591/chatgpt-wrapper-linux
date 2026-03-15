@@ -39,7 +39,7 @@ fn install_header_bar(window: &ApplicationWindow, webview: &WebView) {
     let forward = Button::builder().label("Forward").build();
     let reload = Button::builder().label("Reload").build();
     let continue_chat = Button::builder()
-        .label("Continue")
+        .label("New Chat with Context")
         .tooltip_text("Open a fresh chat and prepare a continuation draft")
         .build();
 

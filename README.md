@@ -83,7 +83,7 @@ The launcher expects the icon name `chatgpt-wrapper` to be available from your l
 - Milestone 4 registers a global X11 hotkey on Lubuntu/LXQt and wires it to the existing window toggle action
 - Milestone 5 adds native download handling with a user-selected save location through GTK's file chooser
 - Milestone 6 adds remembered window size and a small native header bar with back, forward, and reload controls
-- Milestone 7 adds a `Continue` helper that extracts a bounded recent context snapshot, opens a fresh chat, and prepares a draft without auto-sending it
+- Milestone 7 adds a `New Chat with Context` helper that extracts a bounded recent context snapshot, opens a fresh chat, and prepares a draft without auto-sending it
 - A small local install script can place the release binary in `~/.local/bin` and keep the LXQt launcher pointed at a stable path
 - Navigation and login still require manual validation in an interactive LXQt session
 
