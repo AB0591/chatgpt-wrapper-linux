@@ -7,6 +7,8 @@ use webkit6::{
     CookieAcceptPolicy, CookiePersistentStorage, LoadEvent, NetworkSession, Settings, WebView,
 };
 
+use crate::downloads;
+
 const CHATGPT_URL: &str = "https://chatgpt.com";
 const PROFILE_DIR: &str = "chatgpt-wrapper";
 const DATA_DIR: &str = "data";
@@ -69,6 +71,7 @@ fn build_network_session() -> NetworkSession {
             CookiePersistentStorage::Sqlite,
         );
     }
+    downloads::install(&session);
     session
 }
 

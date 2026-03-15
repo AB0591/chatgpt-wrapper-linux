@@ -1,4 +1,5 @@
 mod app;
+mod downloads;
 mod hotkey;
 mod webview;
 mod window;

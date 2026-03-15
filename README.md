@@ -69,13 +69,14 @@ cargo run
 - The app opens ChatGPT in the main content area with JavaScript, local storage, media, cache, and persistent cookie storage enabled
 - Milestone 3 adds app-level show/hide/toggle actions for later hotkey wiring while keeping normal close behavior intact until a real reactivation surface exists
 - Milestone 4 registers a global X11 hotkey on Lubuntu/LXQt and wires it to the existing window toggle action
+- Milestone 5 adds native download handling with a user-selected save location through GTK's file chooser
 - Navigation and login still require manual validation in an interactive LXQt session
 
 ## Current limitations
 
 - The global hotkey currently targets X11 sessions and defaults to `Ctrl+Alt+Space`
 - The global hotkey is not configurable yet
-- No downloads yet
+- Downloads currently rely on GTK's native save dialog and do not yet expose in-app progress UI
 - No window state persistence yet
 - No tray/menu integration yet
 - No DOM automation or credential interception
