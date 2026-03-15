@@ -1,2 +1,17 @@
 .codex/
 target/
+
+# Editors and IDEs
+.idea/
+.vscode/
+*.iml
+*.suo
+*.user
+*.userossc
+*.swp
+*.swo
+*~
+
+# OS metadata
+.DS_Store
+Thumbs.db
