@@ -3,12 +3,15 @@ use std::path::PathBuf;
 use std::{env, sync::OnceLock};
 
 use webkit6::prelude::*;
-use webkit6::{LoadEvent, NetworkSession, Settings, WebView};
+use webkit6::{
+    CookieAcceptPolicy, CookiePersistentStorage, LoadEvent, NetworkSession, Settings, WebView,
+};
 
 const CHATGPT_URL: &str = "https://chatgpt.com";
 const PROFILE_DIR: &str = "chatgpt-wrapper";
 const DATA_DIR: &str = "data";
 const CACHE_DIR: &str = "cache";
+const COOKIE_FILE: &str = "cookies.sqlite";
 
 pub fn build() -> WebView {
     let network_session = build_network_session();
@@ -49,6 +52,7 @@ pub fn build_related(related_view: &WebView) -> WebView {
 fn build_network_session() -> NetworkSession {
     let data_directory = profile_dir(glib::user_data_dir(), DATA_DIR);
     let cache_directory = profile_dir(glib::user_cache_dir(), CACHE_DIR);
+    let cookie_path = data_directory.join(COOKIE_FILE);
 
     ensure_dir(&data_directory);
     ensure_dir(&cache_directory);
@@ -58,6 +62,13 @@ fn build_network_session() -> NetworkSession {
         Some(cache_directory.to_string_lossy().as_ref()),
     );
     session.set_persistent_credential_storage_enabled(true);
+    if let Some(cookie_manager) = session.cookie_manager() {
+        cookie_manager.set_accept_policy(CookieAcceptPolicy::Always);
+        cookie_manager.set_persistent_storage(
+            cookie_path.to_string_lossy().as_ref(),
+            CookiePersistentStorage::Sqlite,
+        );
+    }
     session
 }
 

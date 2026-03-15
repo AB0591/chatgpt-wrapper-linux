@@ -66,7 +66,8 @@ cargo run
 ## Current status
 
 - Milestone 2 adds a dedicated `WebKitGTK` wrapper with persistent browser data and popup window support for web-driven auth/navigation flows
-- The app opens ChatGPT in the main content area with JavaScript, local storage, media, and cache features enabled
+- The app opens ChatGPT in the main content area with JavaScript, local storage, media, cache, and persistent cookie storage enabled
+- Milestone 3 adds app-level show/hide/toggle actions for later hotkey wiring while keeping normal close behavior intact until a real reactivation surface exists
 - Navigation and login still require manual validation in an interactive LXQt session
 
 ## Current limitations

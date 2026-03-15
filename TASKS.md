@@ -15,9 +15,9 @@
 - [x] Keep implementation native-feeling and easy to audit
 
 ## Milestone 3: Window management
-- [ ] Implement reliable show, focus, hide, and toggle behavior
-- [ ] Ensure app activation is reliable under LXQt
-- [ ] Keep window behavior easy to understand and debug
+- [x] Implement reliable show, focus, hide, and toggle behavior
+- [x] Ensure app activation is reliable under LXQt
+- [x] Keep window behavior easy to understand and debug
 
 ## Milestone 4: Global hotkey
 - [ ] Implement a global shortcut that works under Lubuntu/LXQt
