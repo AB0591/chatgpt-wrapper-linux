@@ -68,11 +68,13 @@ cargo run
 - Milestone 2 adds a dedicated `WebKitGTK` wrapper with persistent browser data and popup window support for web-driven auth/navigation flows
 - The app opens ChatGPT in the main content area with JavaScript, local storage, media, cache, and persistent cookie storage enabled
 - Milestone 3 adds app-level show/hide/toggle actions for later hotkey wiring while keeping normal close behavior intact until a real reactivation surface exists
+- Milestone 4 registers a global X11 hotkey on Lubuntu/LXQt and wires it to the existing window toggle action
 - Navigation and login still require manual validation in an interactive LXQt session
 
 ## Current limitations
 
-- No global hotkey yet
+- The global hotkey currently targets X11 sessions and defaults to `Ctrl+Alt+Space`
+- The global hotkey is not configurable yet
 - No downloads yet
 - No window state persistence yet
 - No tray/menu integration yet

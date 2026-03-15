@@ -2,7 +2,10 @@ use gio::prelude::*;
 use gio::ActionEntry;
 use gtk::prelude::*;
 use gtk::{Application, ApplicationWindow};
+use std::sync::mpsc;
+use std::time::Duration;
 
+use crate::hotkey;
 use crate::window;
 
 const APP_ID: &str = "com.ody.chatgptwrapper";
@@ -11,6 +14,7 @@ pub fn run() -> glib::ExitCode {
     let app = Application::builder().application_id(APP_ID).build();
 
     install_actions(&app);
+    install_hotkey_listener(&app);
 
     app.connect_activate(|app| {
         show_main_window(app);
@@ -37,6 +41,23 @@ fn install_actions(app: &Application) {
             })
             .build(),
     ]);
+}
+
+fn install_hotkey_listener(app: &Application) {
+    let (sender, receiver) = mpsc::channel();
+    if let Err(error) = hotkey::start(sender) {
+        eprintln!("Failed to initialize global hotkey: {error}");
+        return;
+    }
+
+    let app = app.clone();
+    glib::timeout_add_local(Duration::from_millis(50), move || {
+        while receiver.try_recv().is_ok() {
+            app.activate_action("toggle-window", None);
+        }
+
+        glib::ControlFlow::Continue
+    });
 }
 
 fn show_main_window(app: &Application) {
