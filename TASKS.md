@@ -21,10 +21,10 @@
 - [x] Keep window behavior easy to understand and debug
 
 ## Milestone 4: Global hotkey
-- [ ] Implement a global shortcut that works under Lubuntu/LXQt
-- [ ] Wire the shortcut to window toggle/focus behavior
-- [ ] Test behavior when the app is backgrounded
-- [ ] Keep the implementation minimal and native where possible
+- [x] Implement a global shortcut that works under Lubuntu/LXQt
+- [x] Wire the shortcut to window toggle/focus behavior
+- [x] Test behavior when the app is backgrounded
+- [x] Keep the implementation minimal and native where possible
 
 ## Milestone 5: Downloads
 - [ ] Add native download support for ChatGPT-generated files and images

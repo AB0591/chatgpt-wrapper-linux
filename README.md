@@ -38,6 +38,7 @@ This branch is the plain C implementation track. It does not require Rust to bui
 - Milestone 1 complete with a plain C `GTK4` + `WebKitGTK` app shell
 - Milestone 2 complete with ChatGPT loading in the main content area and persistent login storage
 - Milestone 3 complete with app-level show, hide, and toggle window actions
+- Milestone 4 complete with an X11 global hotkey wired to the window toggle action
 - WebKit profile data, cookies, and credential storage persist under the normal user data/cache directories
 - No Rust toolchain, Cargo project, or Rust runtime dependency
 - Local compilation verified with `make`, and the app has been run successfully under LXQt
@@ -48,6 +49,7 @@ This branch is the plain C implementation track. It does not require Rust to bui
 - `pkg-config`
 - `libgtk-4-dev`
 - `libwebkitgtk-6.0-dev`
+- `libx11-dev`
 
 ## Build and run
 

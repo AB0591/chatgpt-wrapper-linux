@@ -1,6 +1,8 @@
 #include <gtk/gtk.h>
 #include <webkit/webkit.h>
 
+#include "hotkey.h"
+
 #define CHATGPT_URL "https://chatgpt.com/"
 #define PROFILE_DIR_NAME "chatgpt-wrapper-c"
 #define DATA_DIR_NAME "data"
@@ -195,6 +197,7 @@ main(int argc, char **argv)
     int status;
 
     install_actions(app);
+    hotkey_start(app);
     g_signal_connect(app, "activate", G_CALLBACK(on_app_activate), NULL);
     status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);
