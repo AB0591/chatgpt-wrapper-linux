@@ -3,6 +3,7 @@
 
 #include "downloads.h"
 #include "hotkey.h"
+#include "settings.h"
 
 #define CHATGPT_URL "https://chatgpt.com/"
 #define PROFILE_DIR_NAME "chatgpt-wrapper-c"
@@ -11,6 +12,8 @@
 #define COOKIE_FILE_NAME "cookies.sqlite"
 
 static GtkWindow *main_window = NULL;
+static GtkWidget *back_button = NULL;
+static GtkWidget *forward_button = NULL;
 
 static char *
 build_profile_path(const char *base_dir, const char *leaf_dir)
@@ -75,14 +78,124 @@ create_web_settings(void)
     return settings;
 }
 
+static void
+sync_navigation_buttons(WebKitWebView *web_view)
+{
+    if (back_button != NULL) {
+        gtk_widget_set_sensitive(
+            back_button,
+            webkit_web_view_can_go_back(web_view)
+        );
+    }
+
+    if (forward_button != NULL) {
+        gtk_widget_set_sensitive(
+            forward_button,
+            webkit_web_view_can_go_forward(web_view)
+        );
+    }
+}
+
+static void
+persist_window_size(GtkWindow *window)
+{
+    int width;
+    int height;
+
+    gtk_window_get_default_size(window, &width, &height);
+    settings_store_window(width, height);
+}
+
+static void
+on_back_clicked(GtkButton *button, gpointer user_data)
+{
+    WebKitWebView *web_view = WEBKIT_WEB_VIEW(user_data);
+
+    (void)button;
+
+    if (webkit_web_view_can_go_back(web_view)) {
+        webkit_web_view_go_back(web_view);
+    }
+}
+
+static void
+on_forward_clicked(GtkButton *button, gpointer user_data)
+{
+    WebKitWebView *web_view = WEBKIT_WEB_VIEW(user_data);
+
+    (void)button;
+
+    if (webkit_web_view_can_go_forward(web_view)) {
+        webkit_web_view_go_forward(web_view);
+    }
+}
+
+static void
+on_reload_clicked(GtkButton *button, gpointer user_data)
+{
+    (void)button;
+    webkit_web_view_reload(WEBKIT_WEB_VIEW(user_data));
+}
+
+static void
+on_web_view_load_changed(WebKitWebView *web_view, WebKitLoadEvent load_event, gpointer user_data)
+{
+    GtkWindow *window = GTK_WINDOW(user_data);
+    const char *title = webkit_web_view_get_title(web_view);
+
+    (void)load_event;
+
+    if (title != NULL && title[0] != '\0') {
+        gtk_window_set_title(window, title);
+    } else {
+        gtk_window_set_title(window, "ChatGPT");
+    }
+
+    sync_navigation_buttons(web_view);
+}
+
+static void
+on_web_view_notify_title(WebKitWebView *web_view, GParamSpec *pspec, gpointer user_data)
+{
+    const char *title = webkit_web_view_get_title(web_view);
+
+    (void)pspec;
+
+    if (title != NULL && title[0] != '\0') {
+        gtk_window_set_title(GTK_WINDOW(user_data), title);
+    } else {
+        gtk_window_set_title(GTK_WINDOW(user_data), "ChatGPT");
+    }
+}
+
+static void
+on_web_view_notify_uri(WebKitWebView *web_view, GParamSpec *pspec, gpointer user_data)
+{
+    (void)pspec;
+    (void)user_data;
+    sync_navigation_buttons(web_view);
+}
+
+static void
+on_window_notify_default_size(GObject *object, GParamSpec *pspec, gpointer user_data)
+{
+    (void)pspec;
+    (void)user_data;
+    persist_window_size(GTK_WINDOW(object));
+}
+
 static GtkWindow *
 ensure_main_window(GtkApplication *app)
 {
+    WindowSettings stored = settings_load_window();
+
     if (main_window != NULL) {
         return main_window;
     }
 
     GtkWidget *window = gtk_application_window_new(app);
+    GtkWidget *header = gtk_header_bar_new();
+    GtkWidget *reload_button = gtk_button_new_with_label("Reload");
     WebKitNetworkSession *session = create_network_session();
     WebKitSettings *settings = create_web_settings();
     WebKitWebView *web_view = WEBKIT_WEB_VIEW(g_object_new(
@@ -92,10 +205,55 @@ ensure_main_window(GtkApplication *app)
         NULL
     ));
 
+    back_button = gtk_button_new_with_label("Back");
+    forward_button = gtk_button_new_with_label("Forward");
+
+    gtk_header_bar_set_show_title_buttons(GTK_HEADER_BAR(header), TRUE);
+    gtk_header_bar_pack_start(GTK_HEADER_BAR(header), back_button);
+    gtk_header_bar_pack_start(GTK_HEADER_BAR(header), forward_button);
+    gtk_header_bar_pack_end(GTK_HEADER_BAR(header), reload_button);
+
     gtk_window_set_title(GTK_WINDOW(window), "ChatGPT");
-    gtk_window_set_default_size(GTK_WINDOW(window), 1100, 780);
+    gtk_window_set_default_size(GTK_WINDOW(window), stored.width, stored.height);
+    gtk_window_set_titlebar(GTK_WINDOW(window), header);
     webkit_web_view_load_uri(web_view, CHATGPT_URL);
     gtk_window_set_child(GTK_WINDOW(window), GTK_WIDGET(web_view));
+
+    g_signal_connect(back_button, "clicked", G_CALLBACK(on_back_clicked), web_view);
+    g_signal_connect(forward_button, "clicked", G_CALLBACK(on_forward_clicked), web_view);
+    g_signal_connect(reload_button, "clicked", G_CALLBACK(on_reload_clicked), web_view);
+    g_signal_connect(
+        web_view,
+        "load-changed",
+        G_CALLBACK(on_web_view_load_changed),
+        window
+    );
+    g_signal_connect(
+        web_view,
+        "notify::title",
+        G_CALLBACK(on_web_view_notify_title),
+        window
+    );
+    g_signal_connect(
+        web_view,
+        "notify::uri",
+        G_CALLBACK(on_web_view_notify_uri),
+        NULL
+    );
+    g_signal_connect(
+        window,
+        "notify::default-width",
+        G_CALLBACK(on_window_notify_default_size),
+        NULL
+    );
+    g_signal_connect(
+        window,
+        "notify::default-height",
+        G_CALLBACK(on_window_notify_default_size),
+        NULL
+    );
+
+    sync_navigation_buttons(web_view);
 
     g_object_unref(settings);
     g_object_unref(session);

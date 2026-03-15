@@ -32,10 +32,10 @@
 - [x] Keep download handling minimal and auditable
 
 ## Milestone 6: Polish
-- [ ] Persist window size and position if it stays small and reliable
-- [ ] Add simple navigation controls
-- [ ] Add concise documentation and known caveats
-- [ ] Keep the UI lightweight and maintainable
+- [x] Persist window size if it stays small and reliable
+- [x] Add simple navigation controls
+- [x] Add concise documentation and known caveats
+- [x] Keep the UI lightweight and maintainable
 
 ## Milestone 7: Conversation continuation aid
 - [ ] Add a `New Chat with Context` action

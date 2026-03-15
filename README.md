@@ -40,6 +40,7 @@ This branch is the plain C implementation track. It does not require Rust to bui
 - Milestone 3 complete with app-level show, hide, and toggle window actions
 - Milestone 4 complete with an X11 global hotkey wired to the window toggle action
 - Milestone 5 complete with native download handling through GTK save dialogs
+- Milestone 6 complete with remembered window size, native navigation controls, and updated caveats
 - WebKit profile data, cookies, and credential storage persist under the normal user data/cache directories
 - No Rust toolchain, Cargo project, or Rust runtime dependency
 - Local compilation verified with `make`, and the app has been run successfully under LXQt
@@ -65,6 +66,11 @@ make run
 - Cache: `~/.cache/chatgpt-wrapper-c/`
 
 This is where the embedded WebKit session stores cookies and related site data so you do not need to log in on every launch.
+
+## Current limitations
+
+- Window size is persisted, but window position is not yet stored
+- The global hotkey currently targets X11 sessions and uses `Ctrl+Alt+Space`
 
 ## Repo docs
 
