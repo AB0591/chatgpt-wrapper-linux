@@ -63,11 +63,17 @@ cargo build
 cargo run
 ```
 
+## Current status
+
+- Milestone 2 adds a dedicated `WebKitGTK` wrapper with persistent browser data and popup window support for web-driven auth/navigation flows
+- The app opens ChatGPT in the main content area with JavaScript, local storage, media, and cache features enabled
+- Navigation and login still require manual validation in an interactive LXQt session
+
 ## Current limitations
 
-- Milestone 1 only opens a native window and loads `https://chatgpt.com`
 - No global hotkey yet
 - No downloads yet
 - No window state persistence yet
 - No tray/menu integration yet
 - No DOM automation or credential interception
+- WebKit may emit internal load errors on stderr even when ChatGPT still renders and works; failed loads are logged by default, and verbose load-state logging can be enabled with `CHATGPT_WRAPPER_DEBUG_WEBKIT=1 cargo run`

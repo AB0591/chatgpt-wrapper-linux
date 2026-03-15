@@ -8,11 +8,11 @@
 - [x] Confirm the app builds and runs locally
 
 ## Milestone 2: Embed ChatGPT
-- [ ] Add a Linux web view wrapper around `WebKitGTK`
-- [ ] Load ChatGPT in the main content area
-- [ ] Confirm normal navigation and rendering
-- [ ] Confirm login is possible through the embedded web view
-- [ ] Keep implementation native-feeling and easy to audit
+- [x] Add a Linux web view wrapper around `WebKitGTK`
+- [x] Load ChatGPT in the main content area
+- [x] Confirm normal navigation and rendering
+- [x] Confirm login is possible through the embedded web view
+- [x] Keep implementation native-feeling and easy to audit
 
 ## Milestone 3: Window management
 - [ ] Implement reliable show, focus, hide, and toggle behavior
