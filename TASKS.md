@@ -42,3 +42,6 @@
 - [x] Open a fresh ChatGPT thread and populate the composer with a continuation prompt
 - [x] Keep the user in control by not auto-sending the draft
 - [x] Fail safely when prompt population is unavailable
+
+## Post-milestone maintenance
+- [x] Add a small user-local install flow for the release binary and launcher

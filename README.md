@@ -63,6 +63,18 @@ cargo build
 cargo run
 ```
 
+## Install locally
+
+Build the optimized binary and install it into your user-local application paths:
+
+```bash
+cargo build --release
+./install.sh
+```
+
+This installs the binary to `~/.local/bin/chatgpt-wrapper` and writes a launcher to `~/.local/share/applications/chatgpt-wrapper.desktop`.
+The launcher expects the icon name `chatgpt-wrapper` to be available from your local icon theme setup.
+
 ## Current status
 
 - Milestone 2 adds a dedicated `WebKitGTK` wrapper with persistent browser data and popup window support for web-driven auth/navigation flows
@@ -72,6 +84,7 @@ cargo run
 - Milestone 5 adds native download handling with a user-selected save location through GTK's file chooser
 - Milestone 6 adds remembered window size and a small native header bar with back, forward, and reload controls
 - Milestone 7 adds a `Continue` helper that extracts a bounded recent context snapshot, opens a fresh chat, and prepares a draft without auto-sending it
+- A small local install script can place the release binary in `~/.local/bin` and keep the LXQt launcher pointed at a stable path
 - Navigation and login still require manual validation in an interactive LXQt session
 
 ## Current limitations
