@@ -27,9 +27,9 @@
 - [x] Keep the implementation minimal and native where possible
 
 ## Milestone 5: Downloads
-- [ ] Add native download support for ChatGPT-generated files and images
-- [ ] Use a native save flow for user-selected destinations
-- [ ] Keep download handling minimal and auditable
+- [x] Add native download support for ChatGPT-generated files and images
+- [x] Use a native save flow for user-selected destinations
+- [x] Keep download handling minimal and auditable
 
 ## Milestone 6: Polish
 - [ ] Persist window size and position if it stays small and reliable

@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <webkit/webkit.h>
 
+#include "downloads.h"
 #include "hotkey.h"
 
 #define CHATGPT_URL "https://chatgpt.com/"
@@ -50,6 +51,7 @@ create_network_session(void)
         cookie_path,
         WEBKIT_COOKIE_PERSISTENT_STORAGE_SQLITE
     );
+    downloads_install(session);
 
     g_free(cookie_path);
     g_free(cache_dir);

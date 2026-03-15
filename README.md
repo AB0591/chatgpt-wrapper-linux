@@ -39,6 +39,7 @@ This branch is the plain C implementation track. It does not require Rust to bui
 - Milestone 2 complete with ChatGPT loading in the main content area and persistent login storage
 - Milestone 3 complete with app-level show, hide, and toggle window actions
 - Milestone 4 complete with an X11 global hotkey wired to the window toggle action
+- Milestone 5 complete with native download handling through GTK save dialogs
 - WebKit profile data, cookies, and credential storage persist under the normal user data/cache directories
 - No Rust toolchain, Cargo project, or Rust runtime dependency
 - Local compilation verified with `make`, and the app has been run successfully under LXQt
