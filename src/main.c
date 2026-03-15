@@ -359,6 +359,7 @@ show_main_window(GtkApplication *app)
 {
     GtkWindow *window = ensure_main_window(app);
 
+    gtk_window_set_default_icon_name("chatgpt-wrapper");
     gtk_window_unminimize(window);
     gtk_window_present(window);
 }

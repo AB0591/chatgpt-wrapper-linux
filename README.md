@@ -62,6 +62,15 @@ make
 make run
 ```
 
+## Install locally
+
+```bash
+make
+./install.sh
+```
+
+This installs the binary to `~/.local/bin/chatgpt-wrapper`, writes a launcher to `~/.local/share/applications/chatgpt-wrapper.desktop`, and installs the bundled icon to `~/.local/share/icons/hicolor/512x512/apps/chatgpt-wrapper.png`.
+
 ## Profile storage
 
 - Data: `~/.local/share/chatgpt-wrapper-c/`
