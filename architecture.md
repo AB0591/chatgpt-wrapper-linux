@@ -19,6 +19,11 @@ The UI toolkit should remain open until feasibility is validated, but the chosen
 - stay small and maintainable
 - avoid heavy multi-layer abstractions when possible
 
+For the initial C implementation, use:
+- `GTK4` for application lifecycle and windowing
+- `WebKitGTK 6.0` for the embedded web view
+- plain `cc` plus `pkg-config` for builds
+
 ### Embedded web view
 Use `WebKitGTK` as the preferred embedded web layer.
 Reasons:
@@ -42,16 +47,15 @@ This should be validated early because global hotkey behavior can differ across 
 
 ## Proposed file structure
 
-- `app/`
-- `ui/`
-- `services/`
-- `web/`
+- `src/`
+- `build/`
+- `Makefile`
 - `README.md`
 - `spec.md`
 - `architecture.md`
 - `TASKS.md`
 
-The exact source layout can be adjusted once the Linux stack is chosen, but the code should still separate:
+The exact source layout can be adjusted as milestones are added, but the code should still separate:
 - app lifecycle
 - window and hotkey services
 - web embedding

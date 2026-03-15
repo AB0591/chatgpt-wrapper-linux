@@ -2,6 +2,8 @@
 
 A small, auditable desktop wrapper for ChatGPT targeting Lubuntu on Ubuntu 25.10 with the LXQt desktop session.
 
+This branch is the plain C implementation track. It does not require Rust to build or run.
+
 ## Goals
 
 - Native-feeling Linux desktop app
@@ -30,6 +32,35 @@ A small, auditable desktop wrapper for ChatGPT targeting Lubuntu on Ubuntu 25.10
 ## Preferred web layer
 
 - `WebKitGTK` is the default choice for embedding ChatGPT on Linux
+
+## Current implementation status
+
+- Milestone 1 complete with a plain C `GTK4` + `WebKitGTK` app shell
+- Milestone 2 started with ChatGPT loading in the main content area
+- WebKit profile data, cookies, and credential storage persist under the normal user data/cache directories
+- No Rust toolchain, Cargo project, or Rust runtime dependency
+- Local compilation verified with `make`, and the app has been run successfully under LXQt
+
+## Build requirements
+
+- `build-essential`
+- `pkg-config`
+- `libgtk-4-dev`
+- `libwebkitgtk-6.0-dev`
+
+## Build and run
+
+```bash
+make
+make run
+```
+
+## Profile storage
+
+- Data: `~/.local/share/chatgpt-wrapper-c/`
+- Cache: `~/.cache/chatgpt-wrapper-c/`
+
+This is where the embedded WebKit session stores cookies and related site data so you do not need to log in on every launch.
 
 ## Repo docs
 

@@ -1,15 +1,16 @@
 # Build Tasks
 
 ## Milestone 1: Linux feasibility
-- [ ] Choose the Linux UI/runtime stack
-- [ ] Confirm the app can target Lubuntu/LXQt cleanly
-- [ ] Confirm `WebKitGTK` is viable for loading ChatGPT
-- [ ] Create a minimal desktop app shell
-- [ ] Confirm the app builds and runs locally
+- [x] Choose the Linux UI/runtime stack
+- [x] Confirm the app can target Lubuntu/LXQt cleanly
+- [x] Confirm `WebKitGTK` is viable for loading ChatGPT
+- [x] Create a minimal desktop app shell
+- [x] Confirm the app builds and runs locally
 
 ## Milestone 2: Embed ChatGPT
-- [ ] Add a Linux web view wrapper around `WebKitGTK`
-- [ ] Load ChatGPT in the main content area
+- [x] Add a Linux web view wrapper around `WebKitGTK`
+- [x] Load ChatGPT in the main content area
+- [x] Persist cookies and site data so login survives app restarts
 - [ ] Confirm normal navigation and rendering
 - [ ] Confirm login is possible through the embedded web view
 - [ ] Keep implementation native-feeling and easy to audit
