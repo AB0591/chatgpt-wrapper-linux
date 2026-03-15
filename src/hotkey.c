@@ -12,7 +12,12 @@
 typedef struct {
     GtkApplication *app;
     GAsyncQueue *events;
+    GThread *thread;
+    guint timeout_id;
+    gboolean stop_requested;
 } HotkeyContext;
+
+static HotkeyContext *global_hotkey_context = NULL;
 
 static guint
 modifier_variant(guint base, guint index)
@@ -33,6 +38,10 @@ static gboolean
 dispatch_hotkey_event(gpointer user_data)
 {
     HotkeyContext *context = user_data;
+
+    if (g_atomic_int_get((int *)&context->stop_requested)) {
+        return G_SOURCE_REMOVE;
+    }
 
     while (g_async_queue_try_pop(context->events) != NULL) {
         g_action_group_activate_action(
@@ -91,17 +100,55 @@ hotkey_listener_thread(gpointer user_data)
     XSelectInput(display, root, 0);
     XSync(display, False);
 
-    while (1) {
-        XEvent event;
+    while (!g_atomic_int_get((int *)&context->stop_requested)) {
+        while (XPending(display) > 0) {
+            XEvent event;
 
-        XNextEvent(display, &event);
-        if (event.type == KeyPress) {
-            g_async_queue_push(context->events, GINT_TO_POINTER(1));
+            XNextEvent(display, &event);
+            if (event.type == KeyPress) {
+                g_async_queue_push(context->events, GINT_TO_POINTER(1));
+            }
         }
+
+        g_usleep(50000);
     }
 
+    for (i = 0; i < 4; i++) {
+        XUngrabKey(
+            display,
+            keycode,
+            modifier_variant(base_modifiers, i),
+            root
+        );
+    }
+    XSync(display, False);
     XCloseDisplay(display);
     return NULL;
+}
+
+static void
+hotkey_stop(gpointer user_data)
+{
+    HotkeyContext *context = user_data;
+
+    if (context == NULL) {
+        return;
+    }
+
+    g_atomic_int_set((int *)&context->stop_requested, TRUE);
+
+    if (context->thread != NULL) {
+        g_thread_join(context->thread);
+    }
+
+    if (context->timeout_id != 0) {
+        g_source_remove(context->timeout_id);
+    }
+
+    g_async_queue_unref(context->events);
+    g_object_unref(context->app);
+    g_free(context);
+    global_hotkey_context = NULL;
 }
 
 void
@@ -111,7 +158,11 @@ hotkey_start(GtkApplication *app)
 
     context->app = g_object_ref(app);
     context->events = g_async_queue_new();
+    context->stop_requested = FALSE;
 
-    g_timeout_add(50, dispatch_hotkey_event, context);
-    g_thread_new("global-hotkey", hotkey_listener_thread, context);
+    context->timeout_id = g_timeout_add(50, dispatch_hotkey_event, context);
+    context->thread = g_thread_new("global-hotkey", hotkey_listener_thread, context);
+    global_hotkey_context = context;
+
+    g_signal_connect_swapped(app, "shutdown", G_CALLBACK(hotkey_stop), context);
 }

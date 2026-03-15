@@ -241,11 +241,15 @@ on_extract_snapshot_finished(GObject *source_object, GAsyncResult *result, gpoin
     if (error != NULL) {
         show_message(window, "Could not read the current conversation.", error->message);
         g_error_free(error);
+        g_object_unref(window);
         return;
     }
 
     if (value != NULL && jsc_value_is_string(value)) {
         snapshot = jsc_value_to_string(value);
+    }
+
+    if (value != NULL) {
         g_object_unref(value);
     }
 
@@ -256,6 +260,7 @@ on_extract_snapshot_finished(GObject *source_object, GAsyncResult *result, gpoin
             "No recent conversation text was detected on the current ChatGPT page."
         );
         g_free(snapshot);
+        g_object_unref(window);
         return;
     }
 
@@ -265,6 +270,7 @@ on_extract_snapshot_finished(GObject *source_object, GAsyncResult *result, gpoin
 
     g_free(prompt);
     g_free(snapshot);
+    g_object_unref(window);
 }
 
 void
@@ -278,6 +284,6 @@ continuation_start(GtkWindow *window, WebKitWebView *web_view)
         NULL,
         NULL,
         on_extract_snapshot_finished,
-        window
+        g_object_ref(window)
     );
 }
