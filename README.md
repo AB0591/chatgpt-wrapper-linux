@@ -71,6 +71,7 @@ cargo run
 - Milestone 4 registers a global X11 hotkey on Lubuntu/LXQt and wires it to the existing window toggle action
 - Milestone 5 adds native download handling with a user-selected save location through GTK's file chooser
 - Milestone 6 adds remembered window size and a small native header bar with back, forward, and reload controls
+- Milestone 7 adds a `Continue` helper that extracts a bounded recent context snapshot, opens a fresh chat, and prepares a draft without auto-sending it
 - Navigation and login still require manual validation in an interactive LXQt session
 
 ## Current limitations
@@ -80,7 +81,7 @@ cargo run
 - Downloads currently rely on GTK's native save dialog and do not yet expose in-app progress UI
 - Window size is restored, but window position is not currently persisted
 - No tray/menu integration yet
-- No DOM automation or credential interception
+- The continuation helper uses a small amount of page-side DOM automation to extract recent text and populate a fresh-chat draft
 - WebKit may emit internal load errors on stderr even when ChatGPT still renders and works; failed loads are logged by default, and verbose load-state logging can be enabled with `CHATGPT_WRAPPER_DEBUG_WEBKIT=1 cargo run`
 
 ## Known caveats
@@ -88,3 +89,4 @@ cargo run
 - This app currently targets Lubuntu/LXQt on X11 first; the global hotkey is not implemented for Wayland sessions
 - ChatGPT behavior still depends on WebKitGTK compatibility with the live site, so occasional site-specific rendering or login quirks may need follow-up
 - Window size persistence is implemented conservatively; window position restore is intentionally not forced because it is less reliable across Linux desktop environments and window managers
+- The continuation helper keeps a manual fallback by copying the generated draft to the clipboard before it tries to populate the new chat composer

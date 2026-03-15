@@ -37,8 +37,8 @@
 - [x] Keep the UI lightweight and maintainable
 
 ## Milestone 7: Conversation continuation aid
-- [ ] Add a `New Chat with Context` action
-- [ ] Extract a limited recent context snapshot from the current conversation
-- [ ] Open a fresh ChatGPT thread and populate the composer with a continuation prompt
-- [ ] Keep the user in control by not auto-sending the draft
-- [ ] Fail safely when prompt population is unavailable
+- [x] Add a `New Chat with Context` action
+- [x] Extract a limited recent context snapshot from the current conversation
+- [x] Open a fresh ChatGPT thread and populate the composer with a continuation prompt
+- [x] Keep the user in control by not auto-sending the draft
+- [x] Fail safely when prompt population is unavailable

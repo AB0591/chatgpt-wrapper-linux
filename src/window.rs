@@ -3,6 +3,7 @@ use gtk::{Application, ApplicationWindow, Box as GtkBox, Button, HeaderBar, Orie
 use webkit6::prelude::*;
 use webkit6::WebView;
 
+use crate::continuation;
 use crate::settings::WindowSettings;
 use crate::webview;
 
@@ -37,9 +38,14 @@ fn install_header_bar(window: &ApplicationWindow, webview: &WebView) {
     let back = Button::builder().label("Back").build();
     let forward = Button::builder().label("Forward").build();
     let reload = Button::builder().label("Reload").build();
+    let continue_chat = Button::builder()
+        .label("Continue")
+        .tooltip_text("Open a fresh chat and prepare a continuation draft")
+        .build();
 
     header.pack_start(&back);
     header.pack_start(&forward);
+    header.pack_end(&continue_chat);
     header.pack_end(&reload);
     window.set_titlebar(Some(&header));
 
@@ -60,6 +66,12 @@ fn install_header_bar(window: &ApplicationWindow, webview: &WebView) {
     let webview_for_reload = webview.clone();
     reload.connect_clicked(move |_| {
         webview_for_reload.reload();
+    });
+
+    let window_for_continue = window.clone();
+    let webview_for_continue = webview.clone();
+    continue_chat.connect_clicked(move |_| {
+        continuation::start(&window_for_continue, &webview_for_continue);
     });
 
     sync_navigation_buttons(&back, &forward, webview);

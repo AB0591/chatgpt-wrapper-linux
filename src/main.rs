@@ -1,4 +1,5 @@
 mod app;
+mod continuation;
 mod downloads;
 mod hotkey;
 mod settings;
