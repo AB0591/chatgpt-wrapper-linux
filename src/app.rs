@@ -1,7 +1,7 @@
 use gio::prelude::*;
 use gio::ActionEntry;
 use gtk::prelude::*;
-use gtk::{Application, ApplicationWindow};
+use gtk::{Application, ApplicationWindow, Window};
 use std::sync::mpsc;
 use std::time::Duration;
 
@@ -61,6 +61,7 @@ fn install_hotkey_listener(app: &Application) {
 }
 
 fn show_main_window(app: &Application) {
+    Window::set_default_icon_name("chatgpt-wrapper");
     let window = main_window(app).unwrap_or_else(|| window::build(app));
     window.unminimize();
     window.present();
