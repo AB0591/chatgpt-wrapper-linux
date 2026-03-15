@@ -42,6 +42,7 @@ This branch is the plain C implementation track. It does not require Rust to bui
 - Milestone 5 complete with native download handling through GTK save dialogs
 - Milestone 6 complete with remembered window size, native navigation controls, and updated caveats
 - Milestone 7 complete with a `New Chat with Context` action and clipboard-backed continuation draft flow
+- WebKit popup/new-window requests are opened in related wrapper windows for flows such as Codex
 - WebKit profile data, cookies, and credential storage persist under the normal user data/cache directories
 - No Rust toolchain, Cargo project, or Rust runtime dependency
 - Local compilation verified with `make`, and the app has been run successfully under LXQt

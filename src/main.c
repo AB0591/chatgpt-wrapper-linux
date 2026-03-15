@@ -17,6 +17,18 @@ static GtkWidget *back_button = NULL;
 static GtkWidget *forward_button = NULL;
 static GtkWidget *continue_button = NULL;
 
+static void
+sync_window_title(GtkWindow *window, WebKitWebView *web_view)
+{
+    const char *title = webkit_web_view_get_title(web_view);
+
+    if (title != NULL && title[0] != '\0') {
+        gtk_window_set_title(window, title);
+    } else {
+        gtk_window_set_title(window, "ChatGPT");
+    }
+}
+
 static char *
 build_profile_path(const char *base_dir, const char *leaf_dir)
 {
@@ -152,31 +164,18 @@ static void
 on_web_view_load_changed(WebKitWebView *web_view, WebKitLoadEvent load_event, gpointer user_data)
 {
     GtkWindow *window = GTK_WINDOW(user_data);
-    const char *title = webkit_web_view_get_title(web_view);
 
     (void)load_event;
 
-    if (title != NULL && title[0] != '\0') {
-        gtk_window_set_title(window, title);
-    } else {
-        gtk_window_set_title(window, "ChatGPT");
-    }
-
+    sync_window_title(window, web_view);
     sync_navigation_buttons(web_view);
 }
 
 static void
 on_web_view_notify_title(WebKitWebView *web_view, GParamSpec *pspec, gpointer user_data)
 {
-    const char *title = webkit_web_view_get_title(web_view);
-
     (void)pspec;
-
-    if (title != NULL && title[0] != '\0') {
-        gtk_window_set_title(GTK_WINDOW(user_data), title);
-    } else {
-        gtk_window_set_title(GTK_WINDOW(user_data), "ChatGPT");
-    }
+    sync_window_title(GTK_WINDOW(user_data), web_view);
 }
 
 static void
@@ -193,6 +192,76 @@ on_window_notify_default_size(GObject *object, GParamSpec *pspec, gpointer user_
     (void)pspec;
     (void)user_data;
     persist_window_size(GTK_WINDOW(object));
+}
+
+static void
+on_popup_ready_to_show(WebKitWebView *web_view, gpointer user_data)
+{
+    GtkWindow *window = GTK_WINDOW(user_data);
+
+    gtk_window_present(window);
+    sync_window_title(window, web_view);
+}
+
+static void
+on_popup_notify_title(WebKitWebView *web_view, GParamSpec *pspec, gpointer user_data)
+{
+    (void)pspec;
+    sync_window_title(GTK_WINDOW(user_data), web_view);
+}
+
+static gboolean
+on_popup_close(WebKitWebView *web_view, gpointer user_data)
+{
+    GtkWindow *window = GTK_WINDOW(user_data);
+
+    (void)web_view;
+    gtk_window_destroy(window);
+    return TRUE;
+}
+
+static GtkWidget *
+on_web_view_create(WebKitWebView *web_view, WebKitNavigationAction *navigation_action, gpointer user_data)
+{
+    GtkWindow *parent_window = GTK_WINDOW(user_data);
+    GtkApplication *app = gtk_window_get_application(parent_window);
+    GtkWidget *popup_window = gtk_application_window_new(app);
+    int width = 900;
+    int height = 700;
+    WebKitWebView *popup_web_view = WEBKIT_WEB_VIEW(g_object_new(
+        WEBKIT_TYPE_WEB_VIEW,
+        "related-view", web_view,
+        NULL
+    ));
+
+    (void)navigation_action;
+
+    gtk_window_get_default_size(parent_window, &width, &height);
+    gtk_window_set_title(GTK_WINDOW(popup_window), "ChatGPT");
+    gtk_window_set_default_size(GTK_WINDOW(popup_window), width, height);
+    gtk_window_set_transient_for(GTK_WINDOW(popup_window), parent_window);
+    gtk_window_set_child(GTK_WINDOW(popup_window), GTK_WIDGET(popup_web_view));
+
+    g_signal_connect(
+        popup_web_view,
+        "ready-to-show",
+        G_CALLBACK(on_popup_ready_to_show),
+        popup_window
+    );
+    g_signal_connect(
+        popup_web_view,
+        "notify::title",
+        G_CALLBACK(on_popup_notify_title),
+        popup_window
+    );
+    g_signal_connect(
+        popup_web_view,
+        "close",
+        G_CALLBACK(on_popup_close),
+        popup_window
+    );
+
+    return GTK_WIDGET(popup_web_view);
 }
 
 static GtkWindow *
@@ -237,6 +306,12 @@ ensure_main_window(GtkApplication *app)
     g_signal_connect(reload_button, "clicked", G_CALLBACK(on_reload_clicked), web_view);
     g_object_set_data(G_OBJECT(continue_button), "chatgpt-webview", web_view);
     g_signal_connect(continue_button, "clicked", G_CALLBACK(on_continue_clicked), window);
+    g_signal_connect(
+        web_view,
+        "create",
+        G_CALLBACK(on_web_view_create),
+        window
+    );
     g_signal_connect(
         web_view,
         "load-changed",
