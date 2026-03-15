@@ -1,0 +1,9 @@
+[package]
+name = "chatgpt-wrapper"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+glib = "=0.21.5"
+gtk = { version = "=0.10.2", package = "gtk4" }
+webkit6 = "=0.5.0"

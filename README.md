@@ -37,3 +37,37 @@ A small, auditable desktop wrapper for ChatGPT targeting Lubuntu on Ubuntu 25.10
 - `architecture.md`: proposed Linux architecture and technology choices
 - `TASKS.md`: milestone-based implementation checklist
 - `AGENTS.md`: repo instructions for future coding sessions
+
+## Milestone 1 stack
+
+- Rust from Ubuntu packages via `apt`
+- GTK4 for the app shell
+- WebKitGTK 6.0 for embedded web content
+- No libadwaita, Electron, Tauri, or custom browser logic
+
+## Build dependencies
+
+Install the required toolchain and native development packages with `apt`:
+
+```bash
+sudo apt install build-essential cargo rustc pkg-config libgtk-4-dev libwebkitgtk-6.0-dev
+```
+
+This project intentionally uses distro-managed Rust so the compiler and GTK/WebKit system libraries stay aligned with normal `apt upgrade` maintenance.
+The crate versions are pinned to exact GTK/WebKit Rust releases that stay within the `rustc 1.85.1` compatibility window used by Ubuntu 25.10.
+
+## Build and run
+
+```bash
+cargo build
+cargo run
+```
+
+## Current limitations
+
+- Milestone 1 only opens a native window and loads `https://chatgpt.com`
+- No global hotkey yet
+- No downloads yet
+- No window state persistence yet
+- No tray/menu integration yet
+- No DOM automation or credential interception
