@@ -51,6 +51,7 @@ dependencies = [
 name = "chatgpt-wrapper"
 version = "0.1.0"
 dependencies = [
+ "gio",
  "glib",
  "gtk4",
  "webkit6",
